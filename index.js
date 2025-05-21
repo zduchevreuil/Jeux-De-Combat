@@ -169,14 +169,21 @@ function animate() {
     }
 
     // enemy mouvement
-    if (keys.q.pressed && enemy.lastKey === 'ArrowRight'){
+    if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft'){
         enemy.velocity.x = -5
         enemy.swicthSprite('run')
-    }else if (keys.d.pressed && enemy.lastKey === 'ArrowLeft') {
+    }else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5
         enemy.swicthSprite('run')
     }else {
         enemy.swicthSprite('idle')
+    }
+
+    // jumping 
+    if (enemy.velocity.y < 0) {
+        enemy.swicthSprite('jump')
+    }else if (enemy.velocity.y > 0) {
+        enemy.swicthSprite('fall')
     }
 
     // detected for collision
