@@ -3,9 +3,9 @@ const c = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
-c.fillRect(0, 0, canvas.width, canvas.height);
+c.fillRect(0, 0, canvas.width, canvas.height); 
 
-const gravity = 0.7
+const gravity = 1
 
 const background = new Sprite({
     position: {
@@ -43,7 +43,29 @@ const player = new Fighter({
     scale: 2.5,
     offset: {
         x: 215,
-        y: 155
+        y: 157
+    },
+    sprites: {
+        idle: {
+            imageSrc: './img/samurai/Idle.png',
+            framesMax: 8,
+        },
+        run: {
+            imageSrc: './img/samurai/Run.png',
+            framesMax: 8,
+        },
+        jump: {
+            imageSrc: './img/samurai/Jump.png',
+            framesMax: 2,
+        },
+        fall: {
+            imageSrc: './img/samurai/Fall.png',
+            framesMax: 2,
+        },
+        attack1: {
+            imageSrc: './img/samurai/Attack1.png',
+            framesMax: 6,
+        }
     }
     
 })
@@ -59,12 +81,39 @@ const enemy = new Fighter({
         x: 0,
         y: 0
     },
-    color: 'blue',
     offset: {
         x: -50,
         y: 0
     },
-    imageSrc: ''
+    imageSrc: './img/kenji/Idle.png',
+    framesMax: 8,
+    scale: 2.5,
+    offset: {
+        x: 215,
+        y: 157
+    },
+    sprites: {
+        idle: {
+            imageSrc: './img/kenji/Idle.png',
+            framesMax: 4,
+        },
+        run: {
+            imageSrc: './img/kenji/Run.png',
+            framesMax: 8,
+        },
+        jump: {
+            imageSrc: './img/kenji/Jump.png',
+            framesMax: 2,
+        },
+        fall: {
+            imageSrc: './img/kenji/Fall.png',
+            framesMax: 2,
+        },
+        attack1: {
+            imageSrc: './img/kenji/Attack1.png',
+            framesMax: 4,
+        }
+    }
 })
 
 
@@ -94,7 +143,7 @@ function animate() {
     c.fillStyle = 'black'
     c.fillRect(0, 0, canvas.width, canvas.height)
     background.update()
-    shop.update()
+    // shop.update()
     player.update()
     enemy.update()
 
@@ -104,15 +153,30 @@ function animate() {
     // player mouvement
     if (keys.q.pressed && player.lastKey === 'q'){
         player.velocity.x = -5
+        player.swicthSprite('run')
     }else if (keys.d.pressed && player.lastKey === 'd') {
         player.velocity.x = 5
+        player.swicthSprite('run')
+    }else {
+        player.swicthSprite('idle')
+    }
+
+    // jumping 
+    if (player.velocity.y < 0) {
+        player.swicthSprite('jump')
+    }else if (player.velocity.y > 0) {
+        player.swicthSprite('fall')
     }
 
     // enemy mouvement
-    if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft'){
+    if (keys.q.pressed && enemy.lastKey === 'ArrowRight'){
         enemy.velocity.x = -5
-    }else if (keys.ArrowRight.pressed &&  enemy.lastKey === 'ArrowRight') {
+        enemy.swicthSprite('run')
+    }else if (keys.d.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = 5
+        enemy.swicthSprite('run')
+    }else {
+        enemy.swicthSprite('idle')
     }
 
     // detected for collision
@@ -123,6 +187,7 @@ function animate() {
         })  &&
         player.isAttacking
     ){
+        
         player.isAttacking = false
         enemy.health -= 20
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
@@ -164,9 +229,9 @@ window.addEventListener('keydown', (event) => {
             player.lastKey = 'q'
             break
         case 'z':
-            player.velocity.y = -20
+            player.velocity.y = -18
             break
-        case 's':
+        case ' ':
             if (enemy.health <= 0 || player.health <= 0) {
                 determineWinner({player, enemy, timerId})
             }else if (enemy.health != 0 || player.health != 0)
